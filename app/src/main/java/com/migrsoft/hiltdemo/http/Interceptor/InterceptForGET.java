@@ -14,11 +14,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+@Singleton
 public class InterceptForGET implements Interceptor {
 
     String patStr = "http://.*\\?"
@@ -26,6 +30,10 @@ public class InterceptForGET implements Interceptor {
             + "|[\\u3000-\\u301e\\ufe10-\\ufe19\\ufe30-\\ufe44\\ufe50-\\ufe6b\\uff01-\\uffee]+";
 
     String newPatStr = "http://.*\\?" + "|[^\\w]|_" + "|[\\u4E00-\\u9FA5]+";
+
+    @Inject
+    public InterceptForGET() {
+    }
 
     @Override
     @NotNull

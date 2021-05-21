@@ -2,22 +2,19 @@ package com.migrsoft.hiltdemo.app;
 
 import android.app.Application;
 
+import com.migrsoft.hiltdemo.api.LoginApi;
 import com.migrsoft.hiltdemo.api.UserModuleApi;
-import com.migrsoft.hiltdemo.http.Interceptor.InterceptForGET;
 import com.migrsoft.hiltdemo.http.Interceptor.InterceptForPOST;
 import com.migrsoft.hiltdemo.http.WebApiService;
 import com.migrsoft.hiltdemo.repository.CacheRepository;
 import com.migrsoft.hiltdemo.repository.impl.CacheRepositoryImpl;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
-import dagger.BindsInstance;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
-import okhttp3.Interceptor;
 
 @Module
 @InstallIn(SingletonComponent.class)
@@ -30,22 +27,14 @@ public class AppModule {
     }
 
     @Singleton
-    @Named("GET")
     @Provides
-    InterceptForGET provideInterceptForGET(){
-        return new InterceptForGET();
-    }
-
-    @Singleton
-    @Named("POST")
-    @Provides
-    InterceptForPOST provideInterceptForPOST(){
-        return new InterceptForPOST();
+    UserModuleApi provideUserModuleApi(InterceptForPOST interceptForPOST){
+        return WebApiService.generateApi(UserModuleApi.class,interceptForPOST);
     }
 
     @Singleton
     @Provides
-    UserModuleApi provideUserModuleApi(@Named("POST") Interceptor interceptor){
-        return WebApiService.generateApi(UserModuleApi.class,interceptor);
+    LoginApi provideLoginApi(InterceptForPOST interceptForPOST){
+        return WebApiService.generateApi(LoginApi.class,interceptForPOST);
     }
 }
